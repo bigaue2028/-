@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรแกรมวินเลขนะจ๊ะ !! - Big Edition</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --danger-color: #dc2626;
+            --success-color: #10b981;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        h2 { text-align: center; color: #1e293b; margin-top: 0; font-size: 1.8rem; }
+
+        .input-group { margin-bottom: 1.5rem; }
+
+        label { display: block; margin-bottom: 0.5rem; color: #64748b; font-weight: 600; }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.8rem;
+            text-align: center;
+            box-sizing: border-box;
+            letter-spacing: 8px;
+            transition: all 0.3s;
+        }
+
+        input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+
+        button.main-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        button.main-btn:hover { background-color: #1d4ed8; transform: translateY(-2px); }
+
+        .result-area { margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .result-box {
+            background-color: #ffffff;
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .full-width { grid-column: span 2; }
+        .green-box { background-color: #f0fdf4; border-color: #bbf7d0; }
+        .death-box { background-color: #fef2f2; border-color: #fecaca; }
+
+        .result-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            border-bottom: 2px solid #eff6ff;
+            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 40px;
+        }
+
+        .total-title { color: var(--success-color); border-bottom-color: #dcfce7; }
+        .death-title { color: var(--danger-color); border-bottom-color: #fee2e2; margin-bottom: 1rem; position: relative; }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #475569;
+            z-index: 10;
+        }
+
+        /* ปุ่มคัดลอกรวม ดีไซน์พิเศษ */
+        .copy-all-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            top: -5px;
+            right: 0;
+            padding: 5px 12px;
+            font-weight: bold;
+        }
+        .copy-all-btn:hover { background: #b91c1c; color: white; }
+
+        .copy-btn:hover { background: #e2e8f0; color: var(--primary-color); }
+        .copy-btn.copied { background: var(--success-color); color: white; border-color: var(--success-color); }
+
+        .numbers { font-size: 1.1rem; color: #1e293b; font-weight: 500; line-height: 1.6; word-break: break-all; margin-top: 10px; }
+        .badge { background: #e2e8f0; padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; margin-left: 5px; }
+
+        .death-sub-section {
+            position: relative;
+            background: #fff;
+            border: 1px solid #fee2e2;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .sub-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #991b1b;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .death-numbers-text {
+            font-size: 0.85rem;
+            color: #450a0a;
+            line-height: 1.5;
+            padding-right: 60px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔢 โปรแกรมวินเลขนะจ๊ะ !!</h2>
+    
+    <div class="input-group">
+        <label for="digits">กรอกชุดตัวเลข</label>
+        <input type="text" id="digits" placeholder="1345" maxlength="10" 
+               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+               onkeydown="if(event.key === 'Enter') calculate()">
+    </div>
+
+    <button class="main-btn" onclick="calculate()">วินเลยนะจ๊ะ</button>
+
+    <div class="result-area" id="resultArea" style="display: none;">
+        <div class="result-box full-width">
+            <div class="result-title">เลขวิน 2 ตัว (ไม่เบิ้ล) <span class="badge" id="count2">0</span></div>
+            <button class="copy-btn" onclick="copyText('twoDigits', this)">คัดลอก</button>
+            <div class="numbers" id="twoDigits"></div>
+        </div>
+
+        <div class="result-box full-width green-box">
+            <div class="result-title total-title">⭐️ เบิ้ลรวมเลขวิน (2 ตัว) <span class="badge" id="countSum2">0</span></div>
+            <button class="copy-btn" onclick="copyText('sumTwoDigits', this)">คัดลอก</button>
+            <div class="numbers" id="sumTwoDigits"></div>
+        </div>
+
+        <div class="result-box full-width">
+            <div class="result-title">เลขวิน 3 ตัว (ไม่ตอง) <span class="badge" id="count3">0</span></div>
+            <button class="copy-btn" onclick="copyText('threeDigits', this)">คัดลอก</button>
+            <div class="numbers" id="threeDigits"></div>
+        </div>
+
+        <div class="result-box full-width green-box">
+            <div class="result-title total-title">⭐️ ตองรวมเลขวิน (3 ตัว) <span class="badge" id="countSum3">0</span></div>
+            <button class="copy-btn" onclick="copyText('sumThreeDigits', this)">คัดลอก</button>
+            <div class="numbers" id="sumThreeDigits"></div>
+        </div>
+
+        <div class="result-box full-width death-box">
+            <div class="result-title death-title">
+                💀 ชุดประหาร (แยกหมวด)
+                <button class="copy-btn copy-all-btn" onclick="copyAllDeath(this)">คัดลอกรวมทั้งหมด</button>
+            </div>
+            
+            <div class="death-sub-section">
+                <span class="sub-title">📌 เบิ้ลหลัง</span>
+                <button class="copy-btn" onclick="copyText('backDouble', this)">คัดลอก</button>
+                <div class="death-numbers-text" id="backDouble">100 200 300 400 500 600 700 800 900
+211 311 411 511 611 711 811 911 011
+122 322 422 522 622 722 822 922 022
+133 233 433 533 633 733 833 933 033
+144 244 344 544 644 744 844 944 044
+155 255 355 455 655 755 855 955 055
+166 266 366 466 566 766 866 966 066
+177 277 377 477 577 677 877 977 077
+188 288 388 488 588 688 788 988 088
+199 299 399 499 599 699 799 899 099</div>
+            </div>
+
+            <div class="death-sub-section">
+                <span class="sub-title">📌 เบิ้ลหน้า</span>
+                <button class="copy-btn" onclick="copyText('frontDouble', this)">คัดลอก</button>
+                <div class="death-numbers-text" id="frontDouble">001 002 003 004 005 006 007 008 009
+112 113 114 115 116 117 118 119 110
+221 223 224 225 226 227 228 229 220
+331 332 334 335 336 337 338 339 330
+441 442 443 445 446 447 448 449 440
+551 552 553 554 556 557 558 559 550
+661 662 663 664 665 667 668 669 660
+771 772 773 774 775 776 778 779 770
+881 882 883 884 885 886 887 889 880
+991 992 993 994 995 996 997 998 990</div>
+            </div>
+
+            <div class="death-sub-section">
+                <span class="sub-title">📌 หาม</span>
+                <button class="copy-btn" onclick="copyText('haamDouble', this)">คัดลอก</button>
+                <div class="death-numbers-text" id="haamDouble">010 020 030 040 050 060 070 080 090
+121 131 141 151 161 171 181 191 101
+212 232 242 252 262 272 282 292 202
+313 323 343 353 363 373 383 393 303
+414 424 434 454 464 474 484 494 404
+515 525 535 545 565 575 585 595 505
+616 626 636 646 656 676 686 696 606
+717 727 737 747 757 767 787 797 707
+818 828 838 848 858 868 878 898 808
+919 929 939 949 959 969 979 989 909</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const input = document.getElementById('digits').value;
+        if (input.length < 2) {
+            alert('บิ๊กครับ กรุณากรอกตัวเลขอย่างน้อย 2 ตัวนะจ๊ะ');
+            return;
+        }
+        const digits = input.split('');
+        let pairs = [];
+        for (let i = 0; i < digits.length; i++) {
+            for (let j = i + 1; j < digits.length; j++) {
+                pairs.push(digits[i] + digits[j]);
+            }
+        }
+        let doubles = digits.map(d => d + d);
+        let combined2 = [...pairs, ...doubles];
+        let triples = [];
+        for (let i = 0; i < digits.length; i++) {
+            for (let j = i + 1; j < digits.length; j++) {
+                for (let k = j + 1; k < digits.length; k++) {
+                    triples.push(digits[i] + digits[j] + digits[k]);
+                }
+            }
+        }
+        let tripleRepeat = digits.map(d => d + d + d);
+        let combined3 = [...triples, ...tripleRepeat];
+        renderResult('twoDigits', pairs, 'count2');
+        renderResult('sumTwoDigits', combined2, 'countSum2');
+        renderResult('threeDigits', triples, 'count3');
+        renderResult('sumThreeDigits', combined3, 'countSum3');
+        document.getElementById('resultArea').style.display = 'grid';
+    }
+
+    function renderResult(id, data, countId) {
+        const el = document.getElementById(id);
+        const countEl = document.getElementById(countId);
+        el.innerText = data.join(', ') || '-';
+        countEl.innerText = data.length;
+    }
+
+    function copyText(id, btn) {
+        const text = document.getElementById(id).innerText;
+        if (text === '-' || text === '') return;
+        executeCopy(text, btn);
+    }
+
+    // ฟังก์ชันใหม่สำหรับคัดลอกรวมทั้งหมดในชุดประหาร
+    function copyAllDeath(btn) {
+        const back = document.getElementById('backDouble').innerText;
+        const front = document.getElementById('frontDouble').innerText;
+        const haam = document.getElementById('haamDouble').innerText;
+        const allText = back + "\n" + front + "\n" + haam;
+        executeCopy(allText, btn);
+    }
+
+    function executeCopy(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = 'คัดลอกแล้ว!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('copied');
+            }, 1500);
+        });
+    }
+</script>
+
+</body>
+</html>
